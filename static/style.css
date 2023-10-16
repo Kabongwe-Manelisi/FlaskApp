@@ -1,3 +1,8 @@
-.egDiv{
-    background:green
+
+.content{
+    text-align: center;
+}
+.table {
+    min-width: 50%;
+    text-align: center;
 }
