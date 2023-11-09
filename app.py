@@ -10,7 +10,7 @@ PASSWORD = ''
 db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
 print(db_connection.get_server_info())
 
-cursor = db_connection.cursor()
+cursor = db_connection.cursor(buffered=True)
 cursor.execute('select database();')
 database_name = cursor.fetchone()
 print('[+] you are connected to the database:', database_name)
@@ -20,8 +20,11 @@ print('[+] you are connected to the database:', database_name)
 
 app = Flask(__name__)
 
+cursor.execute('select * from Todo')
+table = cursor.fetchall()
+Todo = table
 
-Todo = cursor.fetchone()
+task_dictionary = { }
 
 def ___repr__(self):
         
@@ -29,29 +32,21 @@ def ___repr__(self):
 
             
 @app.route('/', methods=['POST' , 'GET'])
+
+
 def index():
     if request.method =='POST':
         task_content =request.form['content']
-        new_task = Todo (content=task_content)
+        def new_content(task_dictionary):
+             task_dictionary['content'] = task_content
+        new_content(task_dictionary)
 
-        try:
-            cursor.execute("""
-insert into Todo (id, content) values (
-                           %s,%s
-)
-""", params=(id))
-            db_connection.add(new_task)
-            db_connection.commit()
-            return redirect('/')
-        except:
-            return 'there was an issue adding your task'
-        
+        print(task_dictionary)
+
+
     else:
-        sql_statement = 'select * from Todo order by id'
-        cursor.execute(sql_statement)
-        tasks=cursor.fetchall()
-        # tasks = Todo.query.order_by(Todo.date_created).all()
-        return render_template('index.html', tasks=tasks)
-    
+         return render_template('index.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
