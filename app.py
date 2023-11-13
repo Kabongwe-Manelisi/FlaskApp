@@ -13,7 +13,7 @@ db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=
 print(db_connection.get_server_info())
 
 # database cursor
-cursor = db_connection.cursor(buffered=True)
+cursor = db_connection.cursor()
 cursor.execute('select database();')
 database_name = cursor.fetchone()
 print('[+] you are connected to the database:', database_name)
@@ -35,7 +35,9 @@ def ___repr__(self):
             
 @app.route('/', methods=['POST' , 'GET'])
 
-# request function
+# request functions
+
+# add content function
 def index():
     if request.method =='POST':
         task_content =request.form['content']
@@ -59,9 +61,13 @@ def index():
 
         return redirect('/')
 
-
+# fetch and return data from database
     else:
-         return render_template('index.html')
+         task_sql_statment = 'select content from Todo'
+         cursor.execute(task_sql_statment)
+         tasks = cursor.fetchall()
+         
+         return render_template('index.html', tasks=tasks)
 
 
 if __name__ == '__main__':
